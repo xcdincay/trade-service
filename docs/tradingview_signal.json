@@ -9,7 +9,7 @@
     "strategy": {
         "title": "<Your Strategy Title>",
         "short_title": "<Your Strategy Short Title>",
-        "equity": {{plot("Ghost Equity")}},
+        "equity": {{plot("Strategy Equity")}},
         "has_opentrades": {{plot("Has Open Trades")}},
         "position_size": {{strategy.position_size}}
     },
