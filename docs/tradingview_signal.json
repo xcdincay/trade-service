@@ -6,20 +6,25 @@
     "timestamp": "{{time}}",
     "ticker": "{{ticker}}",
     "timeframe": "{{interval}}",
+    "system_minimum_tick": {{plot("System Minimum Tick")}},
     "strategy": {
         "title": "<Your Strategy Title>",
         "short_title": "<Your Strategy Short Title>",
         "equity": {{plot("Strategy Equity")}},
-        "has_opentrades": {{plot("Has Open Trades")}},
         "position_size": {{strategy.position_size}}
     },
     "trade": {
         "entry_price": {{strategy.order.price}},
+        "stop_loss_price": {{plot("Stop Loss Price")}},
+        "take_profit_price": {{plot("Take Profit Price")}},
         "stop_loss_in_ticks": {{plot("Stop Loss In Ticks")}},
         "take_profit_in_ticks": {{plot("Take Profit In Ticks")}},
         "action": "{{strategy.order.action}}",
         "contracts": {{strategy.order.contracts}},
-        "leverage": {{plot("Leverage")}}
+        "leverage": {{plot("Leverage")}},
+        "gross_profit": {{plot("Last Trade Gross Profit")}},
+        "commission": {{plot("Last Trade Commission")}},
+        "net_profit": {{plot("Last Trade Net Profit")}}
     },
     "type": "{{strategy.order.comment}}",
     "duoSignal": {{plot("Has Duo Signal")}}

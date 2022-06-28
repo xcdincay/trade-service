@@ -8,6 +8,7 @@ export default class Signal {
         timestamp,
         ticker,
         timeframe,
+        system_minimum_tick,
         status,
         strategy,
         trade,
@@ -20,6 +21,7 @@ export default class Signal {
         this.instanceTimestamp = new Date().toISOString();
         this.ticker = ticker;
         this.timeframe = timeframe;
+        this.system_minimum_tick = system_minimum_tick;
         this.status = status;
 
         this.strategy = strategy
@@ -28,7 +30,6 @@ export default class Signal {
                 strategy.title,
                 strategy.short_title,
                 strategy.equity,
-                strategy.has_opentrades,
                 strategy.position_size
             )
             :
@@ -38,12 +39,17 @@ export default class Signal {
             ?
             new SignalTrade(
                 trade.entry_price,
+                trade.stop_loss_price,
+                trade.take_profit_price,
                 trade.stop_loss_in_ticks,
                 trade.take_profit_in_ticks,
                 trade.action,
                 trade.contracts,
                 0,
-                trade.leverage
+                trade.leverage,
+                trade.gross_profit,
+                trade.commission,
+                trade.net_profit,
             )
             :
             undefined;
