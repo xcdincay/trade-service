@@ -1,0 +1,26 @@
+{
+    "authentication": {
+        "bearer": "y4AJDBLnbljqnXTwmzrimsApWUP5P2w"
+    },
+    "exchange": "Binance",
+    "timestamp": "2022-01-01T10:30:00.000",
+    "ticker": "BTCUSDTPERP",
+    "timeframe": "30M",
+    "strategy": {
+        "title": "MT RSI DIOSC Dynamic Plus",
+        "short_title": "MTDRG9",
+        "equity": 100,
+        "has_opentrades": 1,
+        "position_size": -21500
+    },
+    "trade": {
+        "entry_price": 21500,
+        "stop_loss_in_ticks": 0,
+        "take_profit_in_ticks": 0,
+        "action": "buy",
+        "contracts": 0.5,
+        "leverage": 5
+    },
+    "type": "SLTP",
+    "duoSignal": 0
+}

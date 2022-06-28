@@ -1,0 +1,39 @@
+{
+    "authentication": {
+        "accessToken": "<Your Production Bearer>"
+    },
+    "exchanges": {
+        "binanceusdm": {
+            "apiKey": "<Your Production Api Key>",
+            "secret": "<Your Production Secret>",
+            "dryRun": false
+        }
+    },
+    "trade": {
+        "startOnInit": true,
+        "tradableBalanceRatio": 0.98
+    },
+    "communication": {
+        "log": {
+            "consoleLog": false,
+            "levels": [
+                "ERROR",
+                "CRITICAL",
+                "CRITICAL_SUCCESS"
+            ]
+        },
+        "channel": {
+            "telegram": {
+                "enabled": true,
+                "chat_id": "<Your Telegram Chat Id>",
+                "token": "<Your Telegram Bot Token>",
+                "admins": ["<Telegram Username 1>", "<Telegram Username 2>"],
+                "viewers": ["<Telegram Username 1>", "<Telegram Username 2>"]
+            }
+        }
+    },
+    "webserver": {
+        "host": "<Your Server Host>",
+        "port": "<Your Server Port>"
+    }
+}

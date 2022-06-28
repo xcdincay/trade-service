@@ -1,0 +1,39 @@
+{
+    "authentication": {
+        "accessToken": "<Your Test Bearer>"
+    },
+    "exchanges": {
+        "binanceusdm": {
+            "apiKey": "<Your Test Api Key>",
+            "secret": "<Your Test Secret>",
+            "dryRun": true
+        }
+    },
+    "trade": {
+        "startOnInit": true,
+        "tradableBalanceRatio": 0.98
+    },
+    "communication": {
+        "log": {
+            "consoleLog": true,
+            "levels": [
+                "ERROR",
+                "CRITICAL",
+                "CRITICAL_SUCCESS"
+            ]
+        },
+        "channel": {
+            "telegram": {
+                "enabled": true,
+                "chat_id": "<Your Telegram Chat Id>",
+                "token": "<Your Telegram Bot Token>",
+                "admins": ["<Telegram Username 1>", "<Telegram Username 2>"],
+                "viewers": ["<Telegram Username 1>", "<Telegram Username 2>"]
+            }
+        }
+    },
+    "webserver": {
+        "host": "http://localhost",
+        "port": "80"
+    }
+}

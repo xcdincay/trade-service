@@ -1,0 +1,47 @@
+{
+  "name": "monsterader-trade-service",
+  "version": "1.0.0",
+  "description": "Monsterader Trade Service",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "NODE_ENV=test node index.js",
+    "production": "NODE_ENV=production node index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/monsterader/trade-service.git"
+  },
+  "keywords": [
+    "monsterader",
+    "trading-strategy",
+    "crypto",
+    "bot"
+  ],
+  "author": "monsterader",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/monsterader/trade-service/issues"
+  },
+  "homepage": "https://github.com/monsterader/trade-service/blob/main/README.md",
+  "dependencies": {
+    "as-table": "^1.0.55",
+    "better-queue": "^3.8.10",
+    "ccxt": "^1.51.94",
+    "dotenv": "^10.0.0",
+    "env-cmd": "^10.1.0",
+    "express": "^4.17.1",
+    "http-status-codes": "^2.1.4",
+    "lodash": "^4.17.21",
+    "markdown-table": "^3.0.1",
+    "node-fetch": "^2.6.1",
+    "ololog": "^1.1.175",
+    "telegraf": "^4.4.0",
+    "timeago.js": "^4.0.2",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}

@@ -1,0 +1,31 @@
+trigger:
+    - main
+
+jobs:
+    - job: main
+      displayName: Main
+      pool:
+          name: Azure Pipelines
+      steps:
+          - task: CopyFiles@2
+            displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+            inputs:
+                TargetFolder: '$(Build.ArtifactStagingDirectory)'
+          - task: NodeTool@0
+            displayName: 'Use Node Version'
+            inputs:
+                versionSpec: '16.x'
+          - task: Npm@1
+            displayName: 'npm install'
+            inputs:
+                verbose: false
+                workingDir: '$(Build.ArtifactStagingDirectory)'
+          - task: ArchiveFiles@2
+            displayName: 'Archive Files'
+            inputs:
+              rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+              includeRootFolder: false
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Artifact: drop'
+            inputs:
+                ArtifactName: drop
