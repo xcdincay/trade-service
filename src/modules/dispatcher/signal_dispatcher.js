@@ -43,6 +43,7 @@ export default class SignalDispatcher {
             body.timestamp,
             body.ticker,
             body.timeframe ?? undefined,
+            body.system_minimum_tick ?? undefined,
             SignalStatus.PENDING,
             body.strategy ?? undefined,
             body.trade ?? undefined,

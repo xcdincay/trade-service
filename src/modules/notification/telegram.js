@@ -236,20 +236,25 @@ export default class Telegram {
                 timestamp: new Date().toISOString(),
                 ticker: "BTCUSDTPERP",
                 timeframe: "Any",
+                system_minimum_tick: 0,
                 strategy: {
                     title: "Monsterader Master",
                     short_title: "MTMASTER",
                     equity: 0,
-                    has_opentrades: 0,
                     position_size: 0
                 },
                 trade: {
                     entry_price: 0,
+                    stop_loss_price: 0,
+                    take_profit_price: 0,
                     stop_loss_in_ticks: 0,
                     take_profit_in_ticks: 0,
                     action: "auto",
                     contracts: 0,
-                    leverage: 0
+                    leverage: 0,
+                    gross_profit: 0,
+                    commission: 0,
+                    net_profit: 0
                 },
                 type: "CLOSE_ALL",
                 duoSignal: 0
