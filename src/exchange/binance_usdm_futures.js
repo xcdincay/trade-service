@@ -4,8 +4,8 @@ const { binanceusdm } = ccxt;
 export default class BinanceUsdmFutures {
     constructor() {
         this.ccxtClient = undefined;
-        this.last_margin_type = undefined;
-        this.last_leverage = undefined;
+        this.lastMarginType = undefined;
+        this.lastLeverage = undefined;
     }
 
     start(config) {
@@ -56,21 +56,21 @@ export default class BinanceUsdmFutures {
             return;
 
         try {
-            if (marginType != this.last_margin_type) {
+            if (marginType != this.lastMarginType) {
                 await this.ccxtClient.fapiPrivatePostMarginType({ symbol: marketId, marginType: marginType })
-                this.last_margin_type = marginType;
+                this.lastMarginType = marginType;
             }
         } catch (error) {
             if (error.name != 'MarginModeAlreadySet')
                 throw Error(`Could not set margin type. Trade options for the symbol ${marketId}`);
             else
-                this.last_margin_type = marginType;
+                this.lastMarginType = marginType;
         }
 
         try {
-            if (leverage != this.last_leverage) {
+            if (leverage != this.lastLeverage) {
                 await this.ccxtClient.fapiPrivate_post_leverage({ symbol: marketId, leverage: leverage });
-                this.last_leverage = leverage;
+                this.lastLeverage = leverage;
             }
         } catch (error) {
             throw Error(`Could not set leverage. Trade options for the symbol ${marketId} or leverage ${leverage}`);

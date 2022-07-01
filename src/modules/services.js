@@ -19,7 +19,6 @@ import SignalDispatcher from '../modules/dispatcher/signal_dispatcher.js';
 
 let config;
 let appSettings;
-let db;
 let systemUtil;
 
 let telegraf;
@@ -118,7 +117,7 @@ export function getTelegram() {
   const telegramConfig = config.communication.channel.telegram;
 
   if ((telegramConfig && telegramConfig.enabled) &&
-    (telegramConfig.chat_id && telegramConfig.chat_id.length > 0 && telegramConfig.token && telegramConfig.token.length > 0)) {
+    (telegramConfig.chatId && telegramConfig.chatId.length > 0 && telegramConfig.token && telegramConfig.token.length > 0)) {
     return (telegram = new Telegram(getTelegraf(), telegramConfig, getAppSettings(), getSystemUtil()));
   }
 

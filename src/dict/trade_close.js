@@ -20,6 +20,7 @@ export default class TradeClose {
         since,
         entryPrice,
         leverage,
+        lastTrade,
         marginType) {
         this.timestampBeforeOrderCreation = timestampBeforeOrderCreation;
         this.timestampAfterOrderCreation = timestampAfterOrderCreation;
@@ -39,6 +40,7 @@ export default class TradeClose {
         this.since = since;
         this.entryPrice = entryPrice;
         this.leverage = leverage;
+        this.lastTrade = lastTrade;
         this.marginType = marginType;
         this.type = OrderType.CLOSE;
     }

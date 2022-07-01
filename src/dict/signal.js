@@ -8,7 +8,7 @@ export default class Signal {
         timestamp,
         ticker,
         timeframe,
-        system_minimum_tick,
+        systemMinimumTick,
         status,
         strategy,
         trade,
@@ -21,7 +21,7 @@ export default class Signal {
         this.instanceTimestamp = new Date().toISOString();
         this.ticker = ticker;
         this.timeframe = timeframe;
-        this.system_minimum_tick = system_minimum_tick;
+        this.systemMinimumTick = systemMinimumTick;
         this.status = status;
 
         this.strategy = strategy
@@ -47,9 +47,7 @@ export default class Signal {
                 trade.contracts,
                 0,
                 trade.leverage,
-                trade.gross_profit,
-                trade.commission,
-                trade.net_profit,
+                trade.last_trade
             )
             :
             undefined;
