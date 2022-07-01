@@ -14,7 +14,7 @@ export default class SignalListener {
         try {
             this.notificationManager.notifySignal(signal);
             let result = await this.tradeManager.trade(signal);
-            
+
             if (this.tradeManager.isTradingStarted()) {
                 if (result.succeeded) {
                     signal.status = SignalStatus.COMPLETED;
@@ -27,11 +27,7 @@ export default class SignalListener {
             }
         } catch (error) {
             this.logManager.error(`Signal was not processed.`, `Signal id could not be generated.`);
-            
-            if (signal._id) {
-                signal.status = SignalStatus.CANCELLED;
-            }
-
+            signal.status = SignalStatus.CANCELLED;
             throw error;
         }
     }

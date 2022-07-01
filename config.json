@@ -25,7 +25,7 @@
         "channel": {
             "telegram": {
                 "enabled": true,
-                "chat_id": "<Your Telegram Chat Id>",
+                "chatId": "<Your Telegram Chat Id>",
                 "token": "<Your Telegram Bot Token>",
                 "admins": ["<Telegram Username 1>", "<Telegram Username 2>"],
                 "viewers": ["<Telegram Username 1>", "<Telegram Username 2>"]

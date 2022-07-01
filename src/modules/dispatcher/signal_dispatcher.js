@@ -29,9 +29,9 @@ export default class SignalDispatcher {
         }
 
         if (signal.duoSignal && signal.duoSignal == 1)
-            this.queueManager.duo_signal_queue.push(signal);
+            this.queueManager.duoSignalQueue.push(signal);
         else
-            this.queueManager.single_signal_queue.push(signal);
+            this.queueManager.singleSignalQueue.push(signal);
 
         this.logManager.warning('Signal pushed to queue.');
     }

@@ -6,14 +6,14 @@ export default class SignalQueueManager {
         this.signalListener = signalListener;
         this.logManager = logManager;
 
-        this.single_signal_queue = null;
-        this.duo_signal_queue = null;
+        this.singleSignalQueue = null;
+        this.duoSignalQueue = null;
     }
 
     init() {
         const self = this;
 
-        this.single_signal_queue = new Queue(
+        this.singleSignalQueue = new Queue(
             (batch, cb) => this._onQueueItemAdded(batch, cb, false),
 
             {
@@ -29,15 +29,15 @@ export default class SignalQueueManager {
             }
         );
 
-        this.single_signal_queue.on('task_finish', function (taskId, result, stats) {
+        this.singleSignalQueue.on('task_finish', function (taskId, result, stats) {
             self.logManager.success(`Task successfully completed.`, `Task: ${taskId}. Elapsed: ${stats.elapsed}.`);
         })
 
-        this.single_signal_queue.on('task_failed', function (taskId, error, stats) {
+        this.singleSignalQueue.on('task_failed', function (taskId, error, stats) {
             self.logManager.error(`Task failed.`, `Task: ${taskId}. Elapsed: ${stats.elapsed}.`);
         })
 
-        this.duo_signal_queue = new Queue(
+        this.duoSignalQueue = new Queue(
             (batch, cb) => this._onQueueItemAdded(batch, cb, true),
 
             {
@@ -55,11 +55,11 @@ export default class SignalQueueManager {
             }
         );
 
-        this.duo_signal_queue.on('task_finish', function (taskId, result, stats) {
+        this.duoSignalQueue.on('task_finish', function (taskId, result, stats) {
             self.logManager.success(`Task successfully completed.`, `Task: ${taskId}. Elapsed: ${stats.elapsed}.`);
         })
 
-        this.duo_signal_queue.on('task_failed', function (taskId, error, stats) {
+        this.duoSignalQueue.on('task_failed', function (taskId, error, stats) {
             self.logManager.error(`Task failed.`, `Task: ${taskId}. Elapsed: ${stats.elapsed}.`);
         })
     }

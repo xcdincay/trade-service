@@ -38,7 +38,7 @@ export default class Telegram {
     }
 
     send(message) {
-        const chatId = this.config.chat_id;
+        const chatId = this.config.chatId;
 
         if (!chatId) {
             return;
@@ -251,10 +251,7 @@ export default class Telegram {
                     take_profit_in_ticks: 0,
                     action: "auto",
                     contracts: 0,
-                    leverage: 0,
-                    gross_profit: 0,
-                    commission: 0,
-                    net_profit: 0
+                    leverage: 0
                 },
                 type: "CLOSE_ALL",
                 duoSignal: 0
