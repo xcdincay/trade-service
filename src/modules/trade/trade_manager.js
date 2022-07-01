@@ -293,6 +293,7 @@ export default class TradeManager {
                     since,
                     position.entryPrice,
                     position.leverage,
+                    signal.trade.lastTrade,
                     position.isolated ? TradeOption.ISOLATED_MARGIN : TradeOption.CROSSED_MARGIN
                 )
 

@@ -251,7 +251,14 @@ export default class Telegram {
                     take_profit_in_ticks: 0,
                     action: "auto",
                     contracts: 0,
-                    leverage: 0
+                    leverage: 0,
+                    last_trade: {
+                        entry_price: 0,
+                        exit_price: 0,
+                        position_size: 0,
+                        leverage: 0,
+                        pnl_percentage: 0
+                    }
                 },
                 type: "CLOSE_ALL",
                 duoSignal: 0

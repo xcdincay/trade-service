@@ -46,7 +46,8 @@ export default class Signal {
                 trade.action,
                 trade.contracts,
                 0,
-                trade.leverage
+                trade.leverage,
+                trade.last_trade
             )
             :
             undefined;

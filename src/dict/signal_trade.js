@@ -1,3 +1,5 @@
+import LastTrade from './last_trade.js';
+
 export default class SignalTrade {
     constructor(
         entryPrice,
@@ -8,7 +10,8 @@ export default class SignalTrade {
         action,
         contracts,
         calculatedContracts,
-        leverage
+        leverage,
+        lastTrade
     ) {
         this.entryPrice = entryPrice;
         this.stopLossPrice = stopLossPrice;
@@ -19,5 +22,16 @@ export default class SignalTrade {
         this.contracts = contracts;
         this.calculatedContracts = calculatedContracts;
         this.leverage = leverage;
+        this.lastTrade = lastTrade
+            ?
+            new LastTrade(
+                lastTrade.entry_price,
+                lastTrade.exit_price,
+                lastTrade.position_size,
+                lastTrade.leverage,
+                lastTrade.pnl_percentage
+            )
+            :
+            undefined;
     }
 };
