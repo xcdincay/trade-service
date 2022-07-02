@@ -14,4 +14,12 @@ export default class TradeOption {
     static get ORDER_TYPE_MARKET() {
         return 'MARKET';
     }
+
+    static get ORDER_TYPE_TAKE_PROFIT_MARKET() {
+        return 'TAKE_PROFIT_MARKET';
+    }
+
+    static get ORDER_TYPE_STOP_MARKET() {
+        return 'STOP_MARKET';
+    }
 }

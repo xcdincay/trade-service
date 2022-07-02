@@ -148,24 +148,43 @@ export default class TradeManager {
             return false;
         }
 
-        let order;
         let timestampBeforeOrderCreation;
         let timestampAfterOrderCreation;
-
+        let limitSide;
+        let fullfilledOrders = [];
+        
         try {
             this.logManager.warning('Before set trade options.');
             await this.exchangeManager.exchange.setTradeOptions(exchangeContext.market.id, TradeOption.ISOLATED_MARGIN, signal.trade.leverage);
             this.logManager.warning('After set trade options.');
-
+            
             await this.calculateEntryTradeAmount(signal, exchangeContext.balance);
-
+            
             if (signal.trade.calculatedContracts == 0) {
                 this.logManager.error(`Entry order trade amount could not calculated.`, `Error occured for ${signal.type} ${signal.ticker}`);
                 return false;
             }
-
+            
             timestampBeforeOrderCreation = new Date().toISOString();
-            order = await this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_MARKET, signal.trade.action, signal.trade.calculatedContracts);
+            
+            let orders = [
+                this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_MARKET, signal.trade.action, signal.trade.calculatedContracts),
+                this.exchangeManager.exchange.ccxtClient.cancelAllOrders(exchangeContext.market.symbol)
+            ];
+            
+            fullfilledOrders = await Promise.all(orders);
+            
+            if (this.systemUtil.getConfig('trade.enableSltpOnEntry')){
+                limitSide = signal.trade.action == "buy" ? "sell" : "buy";
+    
+                let limitOrders = [
+                    this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_TAKE_PROFIT_MARKET, limitSide, signal.trade.calculatedContracts, signal.trade.take_profit_price, {stopPrice: signal.trade.take_profit_price}),
+                    this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_STOP_MARKET, limitSide, signal.trade.calculatedContracts, signal.trade.stop_loss_price, {stopPrice: signal.trade.stop_loss_price})
+                ];
+                
+                await Promise.all(limitOrders);
+            }
+
             timestampAfterOrderCreation = new Date().toISOString();
         } catch (error) {
             timestampAfterOrderCreation = new Date().toISOString();
@@ -175,11 +194,11 @@ export default class TradeManager {
         }
 
         try {
-            if (order) {
+            if (fullfilledOrders) {
                 this.logManager.success(`Order created successfully.`, `${signal.type} ${signal.ticker} with ${signal.trade.action} action. Contracts: ${signal.trade.contracts}`);
 
                 let position = await this._getCurrentPositionBySymbol(exchangeContext.market.id);
-                let trades = await this._getLastAndPreviousTradeByOrder(exchangeContext.market.symbol, order, 999);
+                let trades = await this._getLastAndPreviousTradeByOrder(exchangeContext.market.symbol, fullfilledOrders[0], 999);
 
                 let tradeEntry = new TradeEntry(
                     timestampBeforeOrderCreation,
@@ -220,8 +239,9 @@ export default class TradeManager {
         if (!exchangeContext)
             return false;
         this.logManager.warning('After get exchange context.');
-        
+
         if (exchangeContext.openPositionAmount == 0) {
+            await this.exchangeManager.exchange.ccxtClient.cancelAllOrders(exchangeContext.market.symbol);
             this.logManager.error(`No open position.`, `Signal type: ${signal.type}. There is not an open position on ${signal.ticker} and position amount is ${exchangeContext.openPositionAmount}.`);
             return false;
         } else {
@@ -246,10 +266,9 @@ export default class TradeManager {
         }
 
         let position;
-        let order;
-
         let timestampBeforeOrderCreation;
         let timestampAfterOrderCreation;
+        let fullfilledOrders = [];
 
         try {
             this.logManager.warning('Before get current position by symbol.');
@@ -258,7 +277,15 @@ export default class TradeManager {
             this.logManager.warning('After get current position by symbol.');
 
             timestampBeforeOrderCreation = new Date().toISOString();
-            order = await this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_MARKET, orderSide, Math.abs(position.positionAmt));
+            let orders = [
+                this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_MARKET, orderSide, Math.abs(position.positionAmt))
+            ];
+
+            if (this.systemUtil.getConfig('trade.enableSltpOnEntry')){
+                orders.push(this.exchangeManager.exchange.ccxtClient.cancelAllOrders(exchangeContext.market.symbol))
+            }
+
+            fullfilledOrders = await Promise.all(orders);
             timestampAfterOrderCreation = new Date().toISOString();
         } catch (error) {
             timestampAfterOrderCreation = new Date().toISOString();
@@ -268,10 +295,10 @@ export default class TradeManager {
         }
 
         try {
-            if (order) {
+            if (fullfilledOrders) {
                 this.logManager.success(`Order closed successfully.`, `${signal.type} ${signal.ticker} with ${signal.trade.action} action. Contracts: ${signal.trade.contracts}`);
 
-                let trades = await this._getLastAndPreviousTradeByOrder(exchangeContext.market.symbol, order, 999);
+                let trades = await this._getLastAndPreviousTradeByOrder(exchangeContext.market.symbol, fullfilledOrders[0], 999);
                 let since = format(new Date(trades.entryOrderTimestamp));
 
                 let tradeClose = new TradeClose(
