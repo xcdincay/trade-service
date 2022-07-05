@@ -123,12 +123,12 @@ export default class TradeManager {
         return true;
     }
 
-    async calculateEntryTradeAmount(signal, balance) {
-        if (!balance.USDT)
+    async calculateEntryTradeAmount(signal, balance, quoteAsset) {
+        if (!balance[quoteAsset])
             return;
 
         let tradableBalanceRatio = this.systemUtil.getConfig('trade.tradableBalanceRatio', 0.99);
-        let equity = signal.strategy.equity > balance.USDT.free ? balance.USDT.free : signal.strategy.equity;
+        let equity = signal.strategy.equity > balance[quoteAsset].free ? balance[quoteAsset].free : signal.strategy.equity;
         let orderSize = ((equity * tradableBalanceRatio) * signal.trade.leverage) / signal.trade.entryPrice;
         signal.trade.calculatedContracts = orderSize;
     }
@@ -158,7 +158,7 @@ export default class TradeManager {
             await this.exchangeManager.exchange.setTradeOptions(exchangeContext.market.id, TradeOption.ISOLATED_MARGIN, signal.trade.leverage);
             this.logManager.warning('After set trade options.');
             
-            await this.calculateEntryTradeAmount(signal, exchangeContext.balance);
+            await this.calculateEntryTradeAmount(signal, exchangeContext.balance, exchangeContext.market.quoteAsset);
             
             if (signal.trade.calculatedContracts == 0) {
                 this.logManager.error(`Entry order trade amount could not calculated.`, `Error occured for ${signal.type} ${signal.ticker}`);
@@ -174,12 +174,12 @@ export default class TradeManager {
             
             fullfilledOrders = await Promise.all(orders);
             
-            if (this.systemUtil.getConfig('trade.enableSltpOnEntry')){
+            if (this.systemUtil.getConfig('trade.sltpOnEntryEnabled')){
                 limitSide = signal.trade.action == "buy" ? "sell" : "buy";
     
                 let limitOrders = [
-                    this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_TAKE_PROFIT_MARKET, limitSide, signal.trade.calculatedContracts, signal.trade.take_profit_price, {stopPrice: signal.trade.take_profit_price}),
-                    this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_STOP_MARKET, limitSide, signal.trade.calculatedContracts, signal.trade.stop_loss_price, {stopPrice: signal.trade.stop_loss_price})
+                    this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_TAKE_PROFIT_MARKET, limitSide, signal.trade.calculatedContracts, signal.trade.takeProfitPrice, {stopPrice: signal.trade.takeProfitPrice}),
+                    this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_STOP_MARKET, limitSide, signal.trade.calculatedContracts, signal.trade.stopLossPrice, {stopPrice: signal.trade.stopLossPrice})
                 ];
                 
                 await Promise.all(limitOrders);
@@ -281,7 +281,7 @@ export default class TradeManager {
                 this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_MARKET, orderSide, Math.abs(position.positionAmt))
             ];
 
-            if (this.systemUtil.getConfig('trade.enableSltpOnEntry')){
+            if (this.systemUtil.getConfig('trade.sltpOnEntryEnabled')){
                 orders.push(this.exchangeManager.exchange.ccxtClient.cancelAllOrders(exchangeContext.market.symbol))
             }
 

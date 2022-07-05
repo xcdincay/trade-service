@@ -4,8 +4,8 @@ const { binanceusdm } = ccxt;
 export default class BinanceUsdmFutures {
     constructor() {
         this.ccxtClient = undefined;
-        this.lastMarginType = undefined;
-        this.lastLeverage = undefined;
+        this.lastMarginType = [];
+        this.lastLeverage = [];
     }
 
     start(config) {
@@ -30,8 +30,14 @@ export default class BinanceUsdmFutures {
 
     getTickerMarket(ticker) {
         switch (ticker) {
+            case 'ETHUSDTPERP':
+                return { id: 'ETHUSDT', symbol: 'ETH/USDT', quoteAsset: 'USDT' }
+            case 'ETHBUSDPERP':
+                return { id: 'ETHBUSD', symbol: 'ETH/BUSD', quoteAsset: 'BUSD' }
             case 'BTCUSDTPERP':
-                return { id: 'BTCUSDT', symbol: 'BTC/USDT' }
+                return { id: 'BTCUSDT', symbol: 'BTC/USDT', quoteAsset: 'USDT' }
+            case 'BTCBUSDPERP':
+                return { id: 'BTCBUSD', symbol: 'BTC/BUSD', quoteAsset: 'BUSD' }
             default:
                 return null;
         }
@@ -56,21 +62,21 @@ export default class BinanceUsdmFutures {
             return;
 
         try {
-            if (marginType != this.lastMarginType) {
+            if (marginType != this.lastMarginType[marketId]) {
                 await this.ccxtClient.fapiPrivatePostMarginType({ symbol: marketId, marginType: marginType })
-                this.lastMarginType = marginType;
+                this.lastMarginType[marketId] = marginType;
             }
         } catch (error) {
             if (error.name != 'MarginModeAlreadySet')
                 throw Error(`Could not set margin type. Trade options for the symbol ${marketId}`);
             else
-                this.lastMarginType = marginType;
+                this.lastMarginType[marketId] = marginType;
         }
 
         try {
-            if (leverage != this.lastLeverage) {
+            if (leverage != this.lastLeverage[marketId]) {
                 await this.ccxtClient.fapiPrivate_post_leverage({ symbol: marketId, leverage: leverage });
-                this.lastLeverage = leverage;
+                this.lastLeverage[marketId] = leverage;
             }
         } catch (error) {
             throw Error(`Could not set leverage. Trade options for the symbol ${marketId} or leverage ${leverage}`);
