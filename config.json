@@ -11,7 +11,8 @@
     },
     "trade": {
         "startOnInit": true,
-        "tradableBalanceRatio": 0.98
+        "tradableBalanceRatio": 0.98,
+        "enableSltpOnEntry": false
     },
     "communication": {
         "log": {
