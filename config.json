@@ -12,7 +12,7 @@
     "trade": {
         "startOnInit": true,
         "tradableBalanceRatio": 0.98,
-        "enableSltpOnEntry": false
+        "sltpOnEntryEnabled": true
     },
     "communication": {
         "log": {
