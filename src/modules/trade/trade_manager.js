@@ -152,36 +152,36 @@ export default class TradeManager {
         let timestampAfterOrderCreation;
         let limitSide;
         let fullfilledOrders = [];
-        
+
         try {
             this.logManager.warning('Before set trade options.');
             await this.exchangeManager.exchange.setTradeOptions(exchangeContext.market.id, TradeOption.ISOLATED_MARGIN, signal.trade.leverage);
             this.logManager.warning('After set trade options.');
-            
+
             await this.calculateEntryTradeAmount(signal, exchangeContext.balance, exchangeContext.market.quoteAsset);
-            
+
             if (signal.trade.calculatedContracts == 0) {
                 this.logManager.error(`Entry order trade amount could not calculated.`, `Error occured for ${signal.type} ${signal.ticker}`);
                 return false;
             }
-            
+
             timestampBeforeOrderCreation = new Date().toISOString();
-            
+
             let orders = [
                 this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_MARKET, signal.trade.action, signal.trade.calculatedContracts),
                 this.exchangeManager.exchange.ccxtClient.cancelAllOrders(exchangeContext.market.symbol)
             ];
-            
+
             fullfilledOrders = await Promise.all(orders);
-            
-            if (this.systemUtil.getConfig('trade.sltpOnEntryEnabled')){
+
+            if (this.systemUtil.getConfig('trade.sltpOnEntryEnabled')) {
                 limitSide = signal.trade.action == "buy" ? "sell" : "buy";
-    
+
                 let limitOrders = [
-                    this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_TAKE_PROFIT_MARKET, limitSide, signal.trade.calculatedContracts, signal.trade.takeProfitPrice, {stopPrice: signal.trade.takeProfitPrice}),
-                    this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_STOP_MARKET, limitSide, signal.trade.calculatedContracts, signal.trade.stopLossPrice, {stopPrice: signal.trade.stopLossPrice})
+                    this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_TAKE_PROFIT_MARKET, limitSide, signal.trade.calculatedContracts, signal.trade.takeProfitPrice, { stopPrice: signal.trade.takeProfitPrice }),
+                    this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_STOP_MARKET, limitSide, signal.trade.calculatedContracts, signal.trade.stopLossPrice, { stopPrice: signal.trade.stopLossPrice })
                 ];
-                
+
                 await Promise.all(limitOrders);
             }
 
@@ -243,6 +243,8 @@ export default class TradeManager {
         if (exchangeContext.openPositionAmount == 0) {
             await this.exchangeManager.exchange.ccxtClient.cancelAllOrders(exchangeContext.market.symbol);
             this.logManager.error(`No open position.`, `Signal type: ${signal.type}. There is not an open position on ${signal.ticker} and position amount is ${exchangeContext.openPositionAmount}.`);
+            let balance = await this.exchangeManager.fetchBalance();
+            this.notificationManager.notifyBalance(balance);
             return false;
         } else {
             if (signal.type != TradeType.SLTP) {
@@ -281,7 +283,7 @@ export default class TradeManager {
                 this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_MARKET, orderSide, Math.abs(position.positionAmt))
             ];
 
-            if (this.systemUtil.getConfig('trade.sltpOnEntryEnabled')){
+            if (this.systemUtil.getConfig('trade.sltpOnEntryEnabled')) {
                 orders.push(this.exchangeManager.exchange.ccxtClient.cancelAllOrders(exchangeContext.market.symbol))
             }
 
@@ -325,6 +327,8 @@ export default class TradeManager {
                 )
 
                 this.notificationManager.notifyTradeClose(tradeClose);
+                let balance = await this.exchangeManager.fetchBalance();
+                this.notificationManager.notifyBalance(balance);
                 return true;
             }
 
