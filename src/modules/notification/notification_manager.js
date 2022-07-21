@@ -2,6 +2,7 @@ import Emoji from '../../dict/emoji.js';
 import LogType from '../../dict/log_type.js';
 import TradeType from '../../dict/trade_type.js';
 import TradeOption from '../../dict/trade_option.js';
+import { markdownTable } from 'markdown-table';
 
 export default class NotificationManager {
   static get UNDEFINED() {
@@ -48,8 +49,8 @@ export default class NotificationManager {
         table = splittedTable.join('\n');
         table = `\`\`\`\n${table}\n\`\`\``;
 
-        this.send(message);
-        resolve(message);
+        this.send(table);
+        resolve(table);
       } catch (error) {
         reject(error);
       }
