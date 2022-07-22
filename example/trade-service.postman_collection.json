@@ -1,0 +1,217 @@
+{
+	"info": {
+		"_postman_id": "678501c0-81f4-4b15-9073-b7e30e3a2b38",
+		"name": "Monsterader Trade Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Buy Signal",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"authentication\": {\n        \"bearer\": \"y4AJDBLnbljqnXTwmzrimsApWUP5P2w\"\n    },\n    \"exchange\": \"Binance\",\n    \"timestamp\": \"2022-01-01T10:30:00.000\",\n    \"ticker\": \"BTCBUSDPERP\",\n    \"timeframe\": \"30Mz\",\n    \"system_minimum_tick\": 0.01,\n    \"strategy\": {\n        \"title\": \"MT RSI DIOSC Dynamic Plus\",\n        \"short_title\": \"MTDRG15\",\n        \"equity\": 100,\n        \"position_size\": 0.5\n    },\n    \"trade\": {\n        \"entry_price\": 21000.129392,\n        \"stop_loss_price\": 19000.1238209,\n        \"take_profit_price\": 23000.443221,\n        \"stop_loss_in_ticks\": 2500.9585848,\n        \"take_profit_in_ticks\": 1500.4747379,\n        \"action\": \"buy\",\n        \"contracts\": 0.5,\n        \"leverage\": 7,\n        \"last_trade\": {\n            \"entry_price\": 21000.129392,\n            \"exit_price\": 21500.129392,\n            \"position_size\": 0.5,\n            \"leverage\": 5,\n            \"pnl_percentage\": 2.5129392\n        }\n    },\n    \"type\": \"BUY\",\n    \"duoSignal\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/signal",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"signal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sell Signal",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"authentication\": {\n        \"bearer\": \"y4AJDBLnbljqnXTwmzrimsApWUP5P2w\"\n    },\n    \"exchange\": \"Binance\",\n    \"timestamp\": \"2022-01-01T10:30:00.000\",\n    \"ticker\": \"BTCUSDTPERP\",\n    \"timeframe\": \"30M\",\n    \"system_minimum_tick\": 0.01,\n    \"strategy\": {\n        \"title\": \"MT RSI DIOSC Dynamic Plus\",\n        \"short_title\": \"MTDRG15\",\n        \"equity\": 100,\n        \"position_size\": 0\n    },\n    \"trade\": {\n        \"entry_price\": 21000.129392,\n        \"stop_loss_price\": 19000.1238209,\n        \"take_profit_price\": 23000.443221,\n        \"stop_loss_in_ticks\": 2500.9585848,\n        \"take_profit_in_ticks\": 1500.4747379,\n        \"action\": \"sell\",\n        \"contracts\": -0.5,\n        \"leverage\": 5,\n        \"last_trade\": {\n            \"entry_price\": 21000.129392,\n            \"exit_price\": 21500.129392,\n            \"position_size\": -0.5,\n            \"leverage\": 5,\n            \"pnl_percentage\": 2.5129392\n        }\n    },\n    \"type\": \"SELL\",\n    \"duoSignal\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/signal",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"signal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Close Buy Signal",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"authentication\": {\n        \"bearer\": \"y4AJDBLnbljqnXTwmzrimsApWUP5P2w\"\n    },\n    \"exchange\": \"Binance\",\n    \"timestamp\": \"2022-02-01T10:30:00.000\",\n    \"ticker\": \"BTCUSDTPERP\",\n    \"timeframe\": \"30M\",\n    \"system_minimum_tick\": 0.01,\n    \"strategy\": {\n        \"title\": \"MT RSI DIOSC Dynamic Plus\",\n        \"short_title\": \"MTDRG15\",\n        \"equity\": 100,\n        \"position_size\": 0\n    },\n    \"trade\": {\n        \"entry_price\": 19500,\n        \"stop_loss_price\": 19000,\n        \"take_profit_price\": 23000,\n        \"stop_loss_in_ticks\": 2500,\n        \"take_profit_in_ticks\": 1500,\n        \"action\": \"sell\",\n        \"contracts\": 0.5,\n        \"leverage\": 5,\n        \"last_trade\": {\n            \"entry_price\": 21000.129392,\n            \"exit_price\": 21500.129392,\n            \"position_size\": 0.5,\n            \"leverage\": 5,\n            \"pnl_percentage\": 2.5129392\n        }\n    },\n    \"type\": \"CLOSE_BUY\",\n    \"duoSignal\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/signal",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"signal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SLTP Signal for Close Buy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"authentication\": {\n        \"bearer\": \"y4AJDBLnbljqnXTwmzrimsApWUP5P2w\"\n    },\n    \"exchange\": \"Binance\",\n    \"timestamp\": \"2022-01-01T10:30:00.000\",\n    \"ticker\": \"BTCUSDTPERP\",\n    \"timeframe\": \"30M\",\n    \"system_minimum_tick\": 0.01,\n    \"strategy\": {\n        \"title\": \"MT RSI DIOSC Dynamic Plus\",\n        \"short_title\": \"MTDRG15\",\n        \"equity\": 100,\n        \"position_size\": 21500\n    },\n    \"trade\": {\n        \"entry_price\": 21500,\n        \"stop_loss_price\": 19000,\n        \"take_profit_price\": 23000,\n        \"stop_loss_in_ticks\": 2500,\n        \"take_profit_in_ticks\": 1500,\n        \"action\": \"sell\",\n        \"contracts\": 0.5,\n        \"leverage\": 5,\n        \"last_trade\": {\n            \"entry_price\": 21000.129392,\n            \"exit_price\": 21500.129392,\n            \"position_size\": 0.5,\n            \"leverage\": 5,\n            \"pnl_percentage\": 2.5129392\n        }\n    },\n    \"type\": \"SLTP\",\n    \"duoSignal\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/signal",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"signal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Close Sell Signal",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"authentication\": {\n        \"bearer\": \"y4AJDBLnbljqnXTwmzrimsApWUP5P2w\"\n    },\n    \"exchange\": \"BINANCE\",\n    \"timestamp\": \"2022-06-30T12:43:02Z\",\n    \"ticker\": \"BTCUSDTPERP\",\n    \"timeframe\": \"S\",\n    \"system_minimum_tick\": 0.1,\n    \"strategy\": {\n        \"title\": \"Center of Gravity Crazy\",\n        \"short_title\": \"MTBST2\",\n        \"equity\": 131.84043435454564,\n        \"position_size\": 0\n    },\n    \"trade\": {\n        \"entry_price\": 19245.5,\n        \"stop_loss_price\": 0,\n        \"take_profit_price\": 0,\n        \"stop_loss_in_ticks\": 0,\n        \"take_profit_in_ticks\": 0,\n        \"action\": \"buy\",\n        \"contracts\": 0.053,\n        \"leverage\": 8,\n        \"last_trade\": {\n            \"entry_price\": 21000.129392,\n            \"exit_price\": 21500.129392,\n            \"position_size\": -0.5,\n            \"leverage\": 5,\n            \"pnl_percentage\": 2.5129392\n        }\n    },\n    \"type\": \"CLOSE_SELL\",\n    \"duoSignal\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/signal",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"signal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SLTP Signal for Close Sell",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"authentication\": {\n        \"bearer\": \"y4AJDBLnbljqnXTwmzrimsApWUP5P2w\"\n    },\n    \"exchange\": \"Binance\",\n    \"timestamp\": \"2022-01-01T10:30:00.000\",\n    \"ticker\": \"BTCUSDTPERP\",\n    \"timeframe\": \"30M\",\n    \"system_minimum_tick\": 0.01,\n    \"strategy\": {\n        \"title\": \"MT RSI DIOSC Dynamic Plus\",\n        \"short_title\": \"MTDRG9\",\n        \"equity\": 1000,\n        \"position_size\": -21500\n    },\n    \"trade\": {\n        \"entry_price\": 21500,\n        \"stop_loss_price\": 19000,\n        \"take_profit_price\": 23000,\n        \"stop_loss_in_ticks\": 2500,\n        \"take_profit_in_ticks\": 1500,\n        \"action\": \"buy\",\n        \"contracts\": 0.5,\n        \"leverage\": 5,\n        \"last_trade\": {\n            \"entry_price\": 21000.129392,\n            \"exit_price\": 21500.129392,\n            \"position_size\": -0.5,\n            \"leverage\": 5,\n            \"pnl_percentage\": 2.5129392\n        }\n    },\n    \"type\": \"SLTP\",\n    \"duoSignal\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/signal",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"signal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Close All Signal",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"authentication\": {\n        \"bearer\": \"y4AJDBLnbljqnXTwmzrimsApWUP5P2w\"\n    },\n    \"exchange\": \"Binance\",\n    \"timestamp\": \"2022-01-01T10:30:00.000\",\n    \"ticker\": \"BTCUSDTPERP\",\n    \"timeframe\": \"30M\",\n    \"system_minimum_tick\": 0.01,\n    \"strategy\": {\n        \"title\": \"Monsterader Master\",\n        \"short_title\": \"MTMASTER\",\n        \"equity\": 0,\n        \"position_size\": 0\n    },\n    \"trade\": {\n        \"entry_price\": 0,\n        \"stop_loss_price\": 0,\n        \"take_profit_price\": 0,\n        \"stop_loss_in_ticks\": 0,\n        \"take_profit_in_ticks\": 0,\n        \"action\": \"auto\",\n        \"contracts\": 0,\n        \"leverage\": 0,\n        \"last_trade\": {\n            \"entry_price\": 21000.129392,\n            \"exit_price\": 21500.129392,\n            \"position_size\": 0.5,\n            \"leverage\": 5,\n            \"pnl_percentage\": 2.5129392\n        }\n    },\n    \"type\": \"CLOSE_ALL\",\n    \"duoSignal\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base-url}}/signal",
+					"host": [
+						"{{base-url}}"
+					],
+					"path": [
+						"signal"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base-url",
+			"value": "http://127.0.0.1:80"
+		}
+	]
+}

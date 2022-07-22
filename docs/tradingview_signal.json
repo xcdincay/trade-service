@@ -21,10 +21,7 @@
         "take_profit_in_ticks": {{plot("Take Profit In Ticks")}},
         "action": "{{strategy.order.action}}",
         "contracts": {{strategy.order.contracts}},
-        "leverage": {{plot("Leverage")}},
-        "gross_profit": {{plot("Last Trade Gross Profit")}},
-        "commission": {{plot("Last Trade Commission")}},
-        "net_profit": {{plot("Last Trade Net Profit")}}
+        "leverage": {{plot("Leverage")}}
     },
     "type": "{{strategy.order.comment}}",
     "duoSignal": {{plot("Has Duo Signal")}}

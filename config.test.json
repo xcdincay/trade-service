@@ -12,7 +12,9 @@
     "trade": {
         "startOnInit": true,
         "tradableBalanceRatio": 0.98,
-        "sltpOnEntryEnabled": true
+        "sltpOnEntryEnabled": true,
+        "signalLatencyCheckEnabled": true,
+        "signalLatencyRectWindow": 30
     },
     "communication": {
         "log": {
@@ -28,8 +30,14 @@
                 "enabled": true,
                 "chatId": "<Your Telegram Chat Id>",
                 "token": "<Your Telegram Bot Token>",
-                "admins": ["<Telegram Username 1>", "<Telegram Username 2>"],
-                "viewers": ["<Telegram Username 1>", "<Telegram Username 2>"]
+                "admins": [
+                    "<Telegram Username 1>",
+                    "<Telegram Username 2>"
+                ],
+                "viewers": [
+                    "<Telegram Username 1>",
+                    "<Telegram Username 2>"
+                ]
             }
         }
     },
