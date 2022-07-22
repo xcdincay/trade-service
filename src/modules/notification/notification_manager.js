@@ -2,6 +2,7 @@ import Emoji from '../../dict/emoji.js';
 import LogType from '../../dict/log_type.js';
 import TradeType from '../../dict/trade_type.js';
 import TradeOption from '../../dict/trade_option.js';
+import { markdownTable } from 'markdown-table';
 
 export default class NotificationManager {
   static get UNDEFINED() {
@@ -15,6 +16,47 @@ export default class NotificationManager {
 
   send(message) {
     this.clients.forEach(client => client.send(message));
+  }
+
+  notifyBalance(balance) {
+    return new Promise((resolve, reject) => {
+      try {
+        let assetList = balance.info.assets.filter(a => a.walletBalance != 0);
+
+        let dataList = [];
+        dataList.push(['Asset', 'Total', 'Free', 'Used', 'UPnL']);
+
+        assetList.map((asset) => {
+          let row = [
+            asset.asset,
+            parseFloat(balance[asset.asset].total).toFixed(2).toString(),
+            parseFloat(balance[asset.asset].free).toFixed(2).toString(),
+            parseFloat(balance[asset.asset].used).toFixed(2).toString(),
+            parseFloat(asset.unrealizedProfit).toFixed(2).toString()
+          ]
+
+          dataList.push(row);
+        })
+
+        let table = markdownTable(
+          dataList,
+          { align: ['l', 'c', 'c', 'c', 'c'] }
+        )
+
+        let splittedTable = table.split('\n');
+        splittedTable.splice(1, 1);
+
+        table = splittedTable.join('\n');
+        table = `\`\`\`\n${table}\n\`\`\``;
+
+        this.send(table);
+        resolve(table);
+      } catch (error) {
+        reject(error);
+      }
+    }).catch((error) => {
+      console.error(error)
+    });
   }
 
   notifyLog(log) {

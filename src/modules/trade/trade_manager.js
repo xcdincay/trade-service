@@ -285,7 +285,38 @@ export default class TradeManager {
 
         if (exchangeContext.openPositionAmount == 0) {
             await this.exchangeManager.exchange.ccxtClient.cancelAllOrders(exchangeContext.market.symbol);
-            this.logManager.error(`No open position.`, `Signal type: ${signal.type}. There is not an open position on ${signal.ticker} and position amount is ${exchangeContext.openPositionAmount}.`);
+            this.logManager.warning(`No open position.`, `Signal type: ${signal.type}. There is not an open position on ${signal.ticker} and position amount is ${exchangeContext.openPositionAmount}.`);
+
+            // Getting last Trades because of the signal comes after the Stop Loss or Take Profit order.
+            let trades = await this._getLastAndPreviousTradeByOrder(exchangeContext.market.symbol, undefined, 999);
+            let position = await this._getTradeByTimestamp(exchangeContext.market.symbol, trades.entryOrderTimestamp, 999);
+            let since = format(new Date(trades.entryOrderTimestamp));
+            let tradeClose = new TradeClose(
+                position.datetime,
+                new Date().toISOString(),
+                this.exchangeManager.exchange.ccxtClient.name,
+                signal._id,
+                signal.ticker,
+                signal.trade.action,
+                signal.trade.entryPrice,
+                signal.trade.contracts,
+                signal.trade.leverage,
+                signal.type,
+                trades.trade.info.realizedPnl,
+                trades.trade.info.qty,
+                trades.trade.info.price,
+                trades.trade.fee.cost,
+                trades.trade.fee.currency,
+                since,
+                position.price,
+                signal.trade.leverage,
+                signal.trade.lastTrade,
+                position.isolated ? TradeOption.ISOLATED_MARGIN : TradeOption.ISOLATED_MARGIN
+            )
+
+            this.notificationManager.notifyTradeClose(tradeClose);
+            let balance = await this.exchangeManager.fetchBalance();
+            this.notificationManager.notifyBalance(balance);
             return false;
         } else {
             if (signal.type != TradeType.SLTP) {
@@ -368,6 +399,8 @@ export default class TradeManager {
                 )
 
                 this.notificationManager.notifyTradeClose(tradeClose);
+                let balance = await this.exchangeManager.fetchBalance();
+                this.notificationManager.notifyBalance(balance);
                 return true;
             }
 
@@ -386,6 +419,17 @@ export default class TradeManager {
         return position;
     }
 
+    async _getTradeByTimestamp(symbol, timestamp, loopbackCount) {
+        try {
+            let trades = await this.exchangeManager.exchange.ccxtClient.fetchMyTrades(symbol, timestamp, loopbackCount, undefined);
+            let filteredTrades = trades.filter(t => t.timestamp == timestamp);
+
+            return filteredTrades[0];
+        } catch (error) {
+            this.logManager.error(`Get trade by timestamp failed.`, `Error occured after order creation. Inner exception: ${error.message}`);
+        }
+    }
+
     async _getLastAndPreviousTradeByOrder(symbol, order, loopbackCount) {
         let trade = {
             info: {
@@ -401,7 +445,20 @@ export default class TradeManager {
 
         try {
             const trades = await this.exchangeManager.exchange.ccxtClient.fetchMyTrades(symbol, undefined, loopbackCount, undefined);
-            let filteredTrades = trades.filter(t => t.order == order.id);
+
+            // just to be sure that fetching trades. sometimes ccxt responding error with fetching trades
+            if (trades.length == 0) {
+                trades = await this.exchangeManager.exchange.ccxtClient.fetchMyTrades(symbol, undefined, loopbackCount, undefined);
+            }
+
+            let filteredTrades;
+
+            if (order && order.id !== undefined) {
+                filteredTrades = trades.filter(t => t.order == order.id);
+            }
+            else {
+                filteredTrades = trades.filter(t => t.timestamp == trades[trades.length - 1].timestamp);
+            }
 
             for (let index = 0; index < filteredTrades.length; index++) {
                 const ft = filteredTrades[index];
