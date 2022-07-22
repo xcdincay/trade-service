@@ -135,7 +135,7 @@ export function getNotificationManager() {
   if (myTelegram)
     clients.push(myTelegram);
 
-  return (notificationManager = new NotificationManager(clients, config.communication));
+  return (notificationManager = new NotificationManager(clients, config.communication, getSystemUtil()));
 }
 
 export function getExchangeManager() {
