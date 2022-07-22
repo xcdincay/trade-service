@@ -19,6 +19,7 @@ export default class TradeManager {
         this.systemUtil = systemUtil;
 
         this.tradingStarted = this.systemUtil.getConfig('trade.startOnInit', false);
+        this.defaultLatencyRectWindow = 30;
     }
 
     startTrading() { (this.tradingStarted = true) };
@@ -76,6 +77,43 @@ export default class TradeManager {
         }
     }
 
+    checkSignalTimeLatency(timeframe, signalTimestamp, receivedTimestamp) {
+        if (!this.systemUtil.getConfig('trade.signalLatencyCheckEnabled', true))
+            return true;
+
+        if (!timeframe || !signalTimestamp || !receivedTimestamp)
+            return false;
+
+        let interval;
+
+        if (timeframe == parseInt(timeframe))
+            interval = parseInt(timeframe)
+        else
+            interval = timeframe;
+
+        let times = this.systemUtil.generateTimesFromInterval(interval);
+
+        let signalDateIsoString = signalTimestamp.substring(0, 19) + "+00:00";
+        let signalDate = new Date(signalDateIsoString);
+
+        let receivedDateIsoString = receivedTimestamp.substring(0, 19) + "+00:00";
+        let receivedDate = new Date(receivedDateIsoString);
+
+        const findClosestTime = (data, target) =>
+            data.reduce((prev, curr) => {
+                return target >= curr ? curr : prev;
+            });
+
+        let closestTime = findClosestTime(times, signalDate);
+        let latencyInSeconds = (receivedDate - closestTime) / 1000;
+
+        if (latencyInSeconds < 0 ||
+            latencyInSeconds > this.systemUtil.getConfig('trade.signalLatencyRectWindow', this.defaultLatencyRectWindow))
+            return false;
+
+        return true;
+    }
+
     async checkCommonTradeData(signal) {
         if (signal.type != TradeType.CLOSE_ALL) {
             if (signal.trade.contracts == 0) {
@@ -88,6 +126,11 @@ export default class TradeManager {
     }
 
     async checkEntryTradeData(signal) {
+        if (!this.checkSignalTimeLatency(signal.timeframe, signal.timestamp, signal.instanceTimestamp)) {
+            this.logManager.error(`Signal latency must be less than ${this.systemUtil.getConfig('trade.signalLatencyRectWindow', this.defaultLatencyRectWindow)} seconds.`);
+            return false;
+        }
+
         if (!await this.checkCommonTradeData(signal))
             return false;
 
@@ -174,7 +217,7 @@ export default class TradeManager {
 
             fullfilledOrders = await Promise.all(orders);
 
-            if (this.systemUtil.getConfig('trade.sltpOnEntryEnabled')) {
+            if (this.systemUtil.getConfig('trade.sltpOnEntryEnabled', true)) {
                 limitSide = signal.trade.action == "buy" ? "sell" : "buy";
 
                 let limitOrders = [
@@ -312,7 +355,7 @@ export default class TradeManager {
                 this.exchangeManager.exchange.ccxtClient.createOrder(exchangeContext.market.symbol, TradeOption.ORDER_TYPE_MARKET, orderSide, Math.abs(position.positionAmt))
             ];
 
-            if (this.systemUtil.getConfig('trade.sltpOnEntryEnabled')) {
+            if (this.systemUtil.getConfig('trade.sltpOnEntryEnabled', true)) {
                 orders.push(this.exchangeManager.exchange.ccxtClient.cancelAllOrders(exchangeContext.market.symbol))
             }
 
