@@ -1,5 +1,4 @@
 import fetch from 'node-fetch';
-import { markdownTable } from 'markdown-table';
 import Emoji from '../../dict/emoji.js';
 
 import UserRole from '../../dict/user_role.js';
@@ -159,33 +158,7 @@ export default class Telegram {
             }
 
             let balance = await this.exchangeManager.fetchBalance();
-            let assetList = balance.info.assets.filter(a => a.walletBalance != 0);
-
-            let dataList = [];
-            dataList.push(['Asset', 'Total', 'Free', 'Used', 'UPnL']);
-
-            assetList.map((asset) => {
-                let row = [
-                    asset.asset,
-                    parseFloat(balance[asset.asset].total).toFixed(2).toString(),
-                    parseFloat(balance[asset.asset].free).toFixed(2).toString(),
-                    parseFloat(balance[asset.asset].used).toFixed(2).toString(),
-                    parseFloat(asset.unrealizedProfit).toFixed(2).toString()
-                ]
-
-                dataList.push(row);
-            })
-
-            let table = markdownTable(
-                dataList,
-                { align: ['l', 'c', 'c', 'c', 'c'] }
-            )
-
-            let splittedTable = table.split('\n');
-            splittedTable.splice(1, 1);
-
-            table = splittedTable.join('\n');
-            table = `\`\`\`\n${table}\n\`\`\``;
+            let table = this.systemUtil.prepareBalanceTable(balance);
 
             this.send(table);
         } catch (error) {
