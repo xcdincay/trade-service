@@ -170,9 +170,17 @@ export default class TradeManager {
         if (!balance[quoteAsset])
             return;
 
-        let tradableBalanceRatio = this.systemUtil.getConfig('trade.tradableBalanceRatio', 0.99);
-        let equity = signal.strategy.equity > balance[quoteAsset].free ? balance[quoteAsset].free : signal.strategy.equity;
-        let orderSize = ((equity * tradableBalanceRatio) * signal.trade.leverage) / signal.trade.entryPrice;
+        let orderSize = 0;
+        let tradableBalanceRatio = this.systemUtil.getConfig('trade.tradableBalanceRatio', 0.98);
+
+        let cost = (signal.trade.entryPrice * signal.trade.contracts) / signal.trade.leverage;
+        let freeToleratedBalance = (balance[quoteAsset].free * tradableBalanceRatio);
+
+        if (freeToleratedBalance >= cost)
+            orderSize = signal.trade.contracts
+        else
+            orderSize = (freeToleratedBalance * signal.trade.leverage) / signal.trade.entryPrice;
+
         signal.trade.calculatedContracts = orderSize;
     }
 
